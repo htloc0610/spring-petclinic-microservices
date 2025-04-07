@@ -129,50 +129,27 @@ pipeline {
                                 if (env.CHANGE_ID && env.CHANGE_TARGET == 'main') {
                                     def coverageValue = coverageData.toFloat()
                                     if (coverageValue < 70) {
-                                        publishChecks(
-                                            name: "Test Code Coverage - ${service}",
-                                            status: 'COMPLETED',
-                                            conclusion: 'FAILURE',
-                                            detailsURL: env.BUILD_URL,
-                                            output: [
-                                                title: 'Code Coverage Check Failed',
-                                                summary: "Coverage for ${service} is ${coverageValue}%, which is below 70%",
-                                                text: 'Please increase test coverage before merging.'
-                                            ]
+                                        // Notify GitHub about failure
+                                        setGitHubPullRequestStatus(
+                                            context: "Code Coverage - ${service}",
+                                            state: 'failure',
+                                            targetUrl: env.BUILD_URL,
+                                            description: "Coverage for ${service} is ${coverageValue}%, which is below 70%. Please increase test coverage before merging."
                                         )
-                                        error "Code coverage for ${service} is ${coverageValue}%, which is below the required 70% for PRs to main. Failing the pipeline."
+                                        error "Code coverage for ${service} is ${coverageValue}%, which is below the required 70%. Failing the pipeline."
                                     } else {
-                                        publishChecks(
-                                            name: "Test Code Coverage - ${service}",
-                                            status: 'COMPLETED',
-                                            conclusion: 'SUCCESS',
-                                            detailsURL: env.BUILD_URL,
-                                            output: [
-                                                title: 'Code Coverage Check Success',
-                                                summary: "Coverage for ${service} is ${coverageValue}%",
-                                                text: 'Check Success!'
-                                            ]
+                                        // Notify GitHub about success
+                                        setGitHubPullRequestStatus(
+                                            context: "Code Coverage - ${service}",
+                                            state: 'success',
+                                            targetUrl: env.BUILD_URL,
+                                            description: "Coverage for ${service} is ${coverageValue}%. All tests passed!"
                                         )
                                     }
                                 }
                             } catch (Exception e) {
                                 error "Code coverage report generation failed for ${service}"
                             }
-                        }
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        env.AFFECTED_SERVICES.split(",").each { service ->
-                            publishHTML([
-                                target: [
-                                    reportDir: "${WORKSPACE_DIR}/${service}/target/site/jacoco",
-                                    reportFiles: 'index.html',
-                                    reportName: "Code Coverage - ${service}"
-                                ]
-                            ])
                         }
                     }
                 }
