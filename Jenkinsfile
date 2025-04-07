@@ -186,31 +186,9 @@ pipeline {
     post {
         success {
             echo "Pipeline completed successfully!"
-            githubChecks(
-                name: 'Jenkins CI',
-                status: 'COMPLETED',
-                conclusion: 'SUCCESS',
-                detailsURL: env.BUILD_URL,
-                output: [
-                    title: 'Build and Tests Passed',
-                    summary: 'The build and tests completed successfully.',
-                    text: 'Everything is green!'
-                ]
-            )
         }
         failure {
             echo "Pipeline failed!"
-            githubChecks(
-                name: 'Jenkins CI',
-                status: 'COMPLETED',
-                conclusion: 'FAILURE',
-                detailsURL: env.BUILD_URL,
-                output: [
-                    title: 'Build or Tests Failed',
-                    summary: 'The build or tests failed.',
-                    text: 'Please check the details.'
-                ]
-            )
         }
         always {
             script {
