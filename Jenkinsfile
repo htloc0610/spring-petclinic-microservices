@@ -126,38 +126,34 @@ pipeline {
 
                                 echo "Code Coverage for ${service}: ${coverageData}%"
 
-                                if (env.CHANGE_ID && env.CHANGE_TARGET == 'main') {
-                                    def coverageValue = coverageData.toFloat()
-                                    if (coverageValue < 70) {
-                                        // Notify GitHub about failure
-                                        githubChecks(
-                                            name: "Test Code Coverage - ${service}",
-                                            status: 'completed',
-                                            conclusion: 'failure',
-                                            detailsURL: env.BUILD_URL,
-                                            output: [
-                                                title: 'Code Coverage Check Failed',
-                                                summary: "Coverage for ${service} is ${coverageValue}%, which is below 70%."
-                                            ]
-                                        )
-                                        error "Code coverage for ${service} is ${coverageValue}%, which is below the required 70%. Failing the pipeline."
-                                    } else {
-                                        // Notify GitHub about success
-                                        githubChecks(
-                                            name: "Test Code Coverage - ${service}",
-                                            status: 'completed',
-                                            conclusion: 'success',
-                                            detailsURL: env.BUILD_URL,
-                                            output: [
-                                                title: 'Code Coverage Check Success',
-                                                summary: "Coverage for ${service} is ${coverageValue}%"
-                                            ]
-                                        )
-                                    }
+                                // For githubChecks
+                                env.COVERAGE_SERVICE = service
+                                env.COVERAGE_VALUE = coverageData
+                                env.COVERAGE_FAILED = (coverageData.toFloat() < 70) ? "true" : "false"
+
+                                if (env.CHANGE_ID && env.CHANGE_TARGET == 'main' && env.COVERAGE_FAILED == "true") {
+                                    error "Code coverage for ${service} is below the required 70%. Failing the pipeline."
                                 }
+
                             } catch (Exception e) {
                                 error "Code coverage report generation failed for ${service}"
                             }
+                        }
+
+                        // Call githubChecks step outside script block
+                        if (env.CHANGE_ID && env.CHANGE_TARGET == 'main') {
+                            def conclusion = env.COVERAGE_FAILED == "true" ? 'failure' : 'success'
+                            def title = env.COVERAGE_FAILED == "true" ? 'Code Coverage Check Failed' : 'Code Coverage Check Success'
+                            def summary = env.COVERAGE_FAILED == "true" ?
+                                "Coverage for ${env.COVERAGE_SERVICE} is ${env.COVERAGE_VALUE}%, which is below 70%." :
+                                "Coverage for ${env.COVERAGE_SERVICE} is ${env.COVERAGE_VALUE}%."
+
+                            // Run githubChecks declaratively
+                            githubChecks name: "Test Code Coverage - ${env.COVERAGE_SERVICE}",
+                                         status: 'completed',
+                                         conclusion: conclusion,
+                                         detailsURL: env.BUILD_URL,
+                                         output: [ title: title, summary: summary ]
                         }
                     }
                 }
