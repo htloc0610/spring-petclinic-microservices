@@ -130,20 +130,28 @@ pipeline {
                                     def coverageValue = coverageData.toFloat()
                                     if (coverageValue < 70) {
                                         // Notify GitHub about failure
-                                        setGitHubPullRequestStatus(
-                                            context: "Code Coverage - ${service}",
-                                            state: 'failure',
-                                            targetUrl: env.BUILD_URL,
-                                            description: "Coverage for ${service} is ${coverageValue}%, which is below 70%. Please increase test coverage before merging."
+                                        githubChecks(
+                                            name: "Test Code Coverage - ${service}",
+                                            status: 'completed',
+                                            conclusion: 'failure',
+                                            detailsURL: env.BUILD_URL,
+                                            output: [
+                                                title: 'Code Coverage Check Failed',
+                                                summary: "Coverage for ${service} is ${coverageValue}%, which is below 70%."
+                                            ]
                                         )
                                         error "Code coverage for ${service} is ${coverageValue}%, which is below the required 70%. Failing the pipeline."
                                     } else {
                                         // Notify GitHub about success
-                                        setGitHubPullRequestStatus(
-                                            context: "Code Coverage - ${service}",
-                                            state: 'success',
-                                            targetUrl: env.BUILD_URL,
-                                            description: "Coverage for ${service} is ${coverageValue}%. All tests passed!"
+                                        githubChecks(
+                                            name: "Test Code Coverage - ${service}",
+                                            status: 'completed',
+                                            conclusion: 'success',
+                                            detailsURL: env.BUILD_URL,
+                                            output: [
+                                                title: 'Code Coverage Check Success',
+                                                summary: "Coverage for ${service} is ${coverageValue}%"
+                                            ]
                                         )
                                     }
                                 }
