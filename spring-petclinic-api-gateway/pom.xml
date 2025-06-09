@@ -136,6 +136,13 @@
             <version>${webjars-marked.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+
+
         <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

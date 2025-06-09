@@ -52,6 +52,13 @@
             <version>${spring-boot-admin.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+
+
         <!-- Third-party librairies -->
         <dependency>
             <groupId>org.jolokia</groupId>
