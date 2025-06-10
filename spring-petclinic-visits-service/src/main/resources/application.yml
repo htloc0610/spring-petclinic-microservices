@@ -12,6 +12,14 @@ management:
     tracing:
       endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
 
+logging:
+  level:
+    root: TRACE
+    org.springframework.web: DEBUG
+    org.springframework.http: DEBUG
+    org.springframework.boot.autoconfigure.web: DEBUG
+    org.apache.coyote.http11: DEBUG
+    your.package.name: TRACE
 
 
 ---
@@ -24,7 +32,10 @@ spring:
 logging:
   level:
     root: TRACE
-    org.springframework.web: TRACE
-    org.springframework.boot.autoconfigure: TRACE
+    org.springframework.web: DEBUG
+    org.springframework.http: DEBUG
+    org.springframework.boot.autoconfigure.web: DEBUG
+    org.apache.coyote.http11: DEBUG
     your.package.name: TRACE
+
 
