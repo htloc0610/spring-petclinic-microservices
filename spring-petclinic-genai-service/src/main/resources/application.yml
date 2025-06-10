@@ -55,11 +55,11 @@ spring:
 
 logging:
   level:
-    root: TRACE
+    root: INFO
     org.springframework.web: DEBUG
-    org.springframework.http: DEBUG
-    org.springframework.boot.autoconfigure.web: DEBUG
-    org.apache.coyote.http11: DEBUG
-    your.package.name: TRACE
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} [${spring.application.name:},%X{traceId:-},%X{spanId:-}] ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n"
+
 
 
