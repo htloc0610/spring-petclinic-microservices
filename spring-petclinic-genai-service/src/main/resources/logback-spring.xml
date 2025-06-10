@@ -1,51 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <!-- Required for Loglevel management into the Spring Petclinic Admin Server -->
+    <!-- Required for Loglevel managment into the Spring Petclinic Admin Server-->
     <jmxConfigurator/>
 
-    <springProfile name="!ci">
-        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-            <http>
-                <url>http://loki:3100/loki/api/v1/push</url>
-                <connectTimeoutMs>2000</connectTimeoutMs>
-                <readTimeoutMs>5000</readTimeoutMs>
-            </http>
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>http://loki:3100/loki/api/v1/push</url>
+            <connectTimeoutMs>2000</connectTimeoutMs>
+            <readTimeoutMs>5000</readTimeoutMs>
+        </http>
 
-            <format>
-                <type>json</type>
-                <label>
-                    <pattern>
-                        app=${spring.application.name:-genai-service},
-                        instance=${HOSTNAME},
-                        level=%level,
-                        <structuredMetadataPattern>
-                            thread=%thread,
-                            logger=%logger,
-                            traceId=%mdc{traceId:-none},
-                            spanId=%X{spanId:-none},
-                            pid=${PID:-none},
-                        </structuredMetadataPattern>
-                    </pattern>
-                </label>
-            </format>
+        <format>
+            <type>json</type>
+            <label>
+                <pattern>
+                    app=${spring.application.name:-genai-service},
+                    instance=${HOSTNAME},
+                    level=%level,
+                    <structuredMetadataPattern>
+                        thread=%thread,
+                        logger=%logger,
+                        traceId=%mdc{traceId:-none},
+                        spanId=%X{spanId:-none},
+                        pid=${PID:-none},
+                    </structuredMetadataPattern>
+                </pattern>
+            </label>
+        </format>
 
-            <batch>
-                <bufferSize>1000</bufferSize>
-                <maxBatchSize>100</maxBatchSize>
-                <timeoutMs>2000</timeoutMs>
-            </batch>
-        </appender>
+        <batch>
+            <bufferSize>1000</bufferSize>
+            <maxBatchSize>100</maxBatchSize>
+            <timeoutMs>2000</timeoutMs>
+        </batch>
+    </appender>
 
-        <root level="INFO">
-            <appender-ref ref="CONSOLE" />
-            <appender-ref ref="LOKI" />
-        </root>
-    </springProfile>
-
-    <springProfile name="ci">
-        <root level="INFO">
-            <appender-ref ref="CONSOLE" />
-        </root>
-    </springProfile>
+    <root level="TRACE">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="LOKI" />
+    </root>
 </configuration>

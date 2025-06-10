@@ -59,8 +59,9 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-    org.springframework.web: DEBUG
-    org.springframework.boot.autoconfigure: DEBUG
-    your.package.name: DEBUG
+    root: TRACE
+    org.springframework.web: TRACE
+    org.springframework.boot.autoconfigure: TRACE
+    your.package.name: TRACE
+
 
