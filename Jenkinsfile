@@ -112,6 +112,10 @@ pipeline {
                 allOf {
                     expression { env.AFFECTED_SERVICES }
                     expression { env.SKIP_PIPELINE != "true" }
+                    expression {
+                        def tagName = sh(script: "git describe --tags --exact-match || true", returnStdout: true).trim()
+                        return tagName == ""
+                    }
                 }
             }
             steps {
@@ -144,6 +148,10 @@ pipeline {
                 allOf {
                     expression { env.AFFECTED_SERVICES }
                     expression { env.SKIP_PIPELINE != "true" }
+                    expression {
+                        def tagName = sh(script: "git describe --tags --exact-match || true", returnStdout: true).trim()
+                        return tagName == ""
+                    }
                 }
             }
             steps {
@@ -177,6 +185,10 @@ pipeline {
                     expression { env.BRANCH_NAME == 'main' }
                     expression { env.AFFECTED_SERVICES }
                     expression { env.SKIP_PIPELINE != "true" }
+                    expression {
+                        def tagName = sh(script: "git describe --tags --exact-match || true", returnStdout: true).trim()
+                        return tagName == ""
+                    }
                 }
             }
             steps {
