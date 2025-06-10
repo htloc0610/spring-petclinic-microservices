@@ -17,8 +17,8 @@
                 <pattern>
                     app=${spring.application.name:-api-gateway},
                     instance=${HOSTNAME},
+                    level=%level,
                     <structuredMetadataPattern>
-                        level=%level,
                         thread=%thread,
                         logger=%logger,
                         traceId=%mdc{traceId:-none},
