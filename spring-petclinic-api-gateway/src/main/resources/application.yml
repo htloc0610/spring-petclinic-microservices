@@ -52,7 +52,7 @@ management:
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
     org.springframework.web: DEBUG
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
@@ -68,7 +68,7 @@ spring:
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
     org.springframework.web: DEBUG
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
