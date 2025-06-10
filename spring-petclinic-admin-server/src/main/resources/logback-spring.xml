@@ -15,9 +15,16 @@
             <type>json</type>
             <label>
                 <pattern>
-                    app=${spring.application.name:-unknown},
-                    level=%level,
-                    instance=${HOSTNAME}
+                    app=${spring.application.name:-admin-server},
+                    instance=${HOSTNAME},
+                    <structuredMetadataPattern>
+                        level=%level,
+                        thread=%thread,
+                        logger=%logger,
+                        traceId=%mdc{traceId:-none},
+                        spanId=%X{spanId:-none},
+                        pid=${PID:-none},
+                    </structuredMetadataPattern>
                 </pattern>
             </label>
         </format>
