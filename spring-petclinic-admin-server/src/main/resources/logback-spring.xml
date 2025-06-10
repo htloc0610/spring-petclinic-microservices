@@ -27,6 +27,21 @@
                     </structuredMetadataPattern>
                 </pattern>
             </label>
+
+            <message>
+                <pattern>
+                    {
+                    "time": "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}",
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%msg",
+                    "traceId": "%X{traceId:-none}",
+                    "spanId": "%X{spanId:-none}",
+                    "pid": "${PID:-none}"
+                    }
+                </pattern>
+            </message>
         </format>
 
         <batch>
@@ -36,8 +51,8 @@
         </batch>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="LOKI" />
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOKI"/>
     </root>
 </configuration>
