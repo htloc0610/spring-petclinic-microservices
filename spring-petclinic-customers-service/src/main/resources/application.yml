@@ -4,37 +4,9 @@ spring:
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
 
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
-
-logging:
-  level:
-    root: DEBUG
-    org.springframework.web: DEBUG
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} [${spring.application.name:},%X{traceId:-},%X{spanId:-}] ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n"
-
-
 ---
 spring:
   config:
     activate:
       on-profile: docker
     import: configserver:http://config-server:8888
-
-logging:
-  level:
-    root: DEBUG
-    org.springframework.web: DEBUG
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} [${spring.application.name:},%X{traceId:-},%X{spanId:-}] ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n"
-
-
-
